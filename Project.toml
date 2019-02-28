@@ -1,6 +1,9 @@
-authors = ["mparadkar "]
 name = "NLPeterman"
 uuid = "c5236f34-d94b-11e8-3d8c-471e8e95cf2f"
+authors = ["mparadkar "]
 version = "0.1.0"
 
 [deps]
+Embeddings = "c5bfea45-b7f1-5224-a596-15500f5db411"
+MurmurHash3 = "b10b62ed-fbae-5ea5-b934-abaf0477b71d"
+WordTokenizers = "796a5d58-b03d-544a-977e-18100b691f6e"

@@ -1,0 +1,22 @@
+tagmap = Dict(
+    "ADJ" => 1,
+    "ADP" => 2,
+    "ADV" => 3,
+    "AUX" => 4,
+    "CONJ" => 5,
+    "CCONJ" => 6, # U20
+    "DET" => 7,
+    "INTJ" => 8,
+    "NOUN" => 9,
+    "NUM" => 10,
+    "PART" => 11,
+    "PRON" => 12,
+    "PROPN" => 13,
+    "PUNCT" => 14,
+    "SCONJ" => 15,
+    "SYM" => 15,
+    "VERB" => 16,
+    "X" => 17,
+    "EOL" => 18,
+    "SPACE" => 19,
+)

@@ -1,5 +1,6 @@
 module NLPeterman
 
-greet() = print("Hello World!")
+include("data.jl")
+include("tokenize.jl")
 
 end # module
