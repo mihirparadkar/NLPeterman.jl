@@ -1,5 +1,4 @@
 mutable struct Lexeme
-    row::Int64
     length::Int64
     orth::UInt64
     lower::UInt64
@@ -8,34 +7,30 @@ mutable struct Lexeme
     suffix::UInt64
 end
 
-mutable struct Vocab
-    strings::Dict{UInt64, SubString{String}}
-    lexemes::Dict{UInt64, Lexeme}
-    hash2row::Dict{UInt64, Int64}
-    vectors::Matrix{Float32}
-end
-
-function addlexeme!(v::Vocab, s::AbstractString)
+function Lexeme(s::AbstractString)
     orth = hash(s)
-    row = haskey(vocab.hash2row, orth) ? vocab.hash2row[orth] : 1
     len = length(s)
     lower = hash(lowercase(s))
     shape = hash(wordshape(s))
-    prefix = hash(SubString(tok,1:1))
-    suffix = hash(length(tok) >= 3 ? SubString(tok, 1:3) : tok)
-    newlex = Lexeme(
-        row,
+    prefx = hash(prefix(s, 1))
+    suffx = hash(suffix(s, 3))
+    Lexeme(
         len,
         orth,
         lower,
         shape,
-        prefix,
-        suffix,
+        prefx,
+        suffx,
     )
-    v.strings[orth] = s
-    v.lexemes[orth] = newlex
-    v.hash2row[orth] = row
-    v
+end
+
+function suffix(s::String, n::Int64)
+    lastind, slen = lastindex(s), length(codeunits(s))
+    SubString(s, prevind(s, slen + 1, min(n, length(s))), lastind)
+end
+
+function prefix(s::String, n::Int64)
+    SubString(s, 1, min(nextind(s, 0, n), length(s)))
 end
 
 """
@@ -75,17 +70,23 @@ mutable struct Token
     lex::Lexeme
 
     # More fields to be added later
-    # pos::Int64
-
-    idx::Int64
+    pos::Int64
 end
 
 mutable struct Doc
-    tokens::Vector{Token}
-    vocab::Vocab
+    tokens::Vector{Vector{Token}}
 end
 
 struct Language{T}
-    vocab::Vocab
-    pipeline::Array
+    sentencer
+    tokenizer
+    tagger
+end
+
+function (Lang::Language)(text::String)
+    sents = Lang.sentencer(text)
+    tokens = Lang.tokenizer.(sents)
+    lexemes = [Lexeme.(sent) for sent in tokens]
+    tags = Lang.tagger.(lexemes)
+    [Token.(lexeme_sent, tag_sent) for (lexeme_sent, tag_sent) in zip(lexemes, tags)]
 end

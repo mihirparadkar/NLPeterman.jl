@@ -1,10 +1,9 @@
 function tokenize(
-    lang::Language{Val{:en}},
+    lang::Language,
     text::String,
 )
-    vocab = lang.vocab
     strtoks = nltk_word_tokenize(text)
-    tokens = Vector{Token}(undef, length(strtoks))
+    lexemes = Lexeme.(strtoks)
 
     for (i, substr) in enumerate(strtoks)
         orth = hash(substr)
@@ -32,12 +31,5 @@ function tokenize(
             i,
         )
     end
-    Doc(tokens, vocab)
-end
-
-function strshape(tok::T) where {T}
-    tmp1 = replace(tok, r"([a-z])"=>s"x")
-    tmp2 = replace(tmp1, r"([A-Z])"=>s"X")
-    tmp3 = replace(tmp2, r"(\d)"=>s"d")
-    tmp3
+    Doc(tokens)
 end
