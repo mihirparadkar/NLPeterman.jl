@@ -1,4 +1,4 @@
-tag_to_idx = Dict(
+const tag_to_idx = Dict(
     "ADJ" => 1,
     "ADP" => 2,
     "ADV" => 3,
@@ -21,7 +21,7 @@ tag_to_idx = Dict(
     "SPACE" => 20,
 )
 
-taglist = [
+const taglist = [
     "ADJ",
     "ADP",
     "ADV",
@@ -43,22 +43,3 @@ taglist = [
     "EOL",
     "SPACE",
 ]
-
-struct GreedyApTagger
-    features::Vector{Symbol}
-    positions::Vector
-    lookup::Dict{UInt64,Int64}
-    model::AveragedPerceptron
-end
-
-function (g::GreedyApTagger)(sent::Vector{Lexeme})
-    labels = zeros(Int64, length(sent))
-    for (i, l) in enumerate(sent)
-        if l.lower in keys(g.lookup)
-            labels[i] = g.lookup[l.lower]
-        end
-    end
-    featmat = sent2feats(sent, g.features, g.positions)
-    complete_prediction!(g.model, featmat, labels, length(taglist) + 1)
-    labels
-end

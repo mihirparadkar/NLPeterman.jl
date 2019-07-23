@@ -12,7 +12,7 @@ function padsentence(sentence::Vector{String}, positions::T) where T
     ]
 end
 
-function hash_vectorize(f::S, sentence::Vector{String}, positions::T) where {S<:Transform,T}
+function hash_vectorize(f::Function, sentence::Vector{String}, positions::T) where {T}
     hashed_padded = hash.(f.(padsentence(sentence, positions)))
     start_offset = min(minimum(positions), 0)
     feats = Matrix{UInt64}(undef, length(positions), length(sentence))
@@ -43,15 +43,4 @@ end
 
 function sent2feats(sentence::Vector{Lexeme}, features::Vector{Symbol}, positions)
     vcat((extract_positions(sentence, feature, position) for (feature,position) in zip(features, positions))...)
-end
-
-### TRANSFORMS ####
-
-function suffix(s::String, n::Int64)
-    lastind, slen = lastindex(s), length(codeunits(s))
-    SubString(s, prevind(s, slen + 1, min(n, length(s))), lastind)
-end
-
-function prefix(s::String, n::Int64)
-    SubString(s, 1, min(nextind(s, 0, n), length(s)))
 end

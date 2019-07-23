@@ -77,7 +77,7 @@ mutable struct Doc
     tokens::Vector{Vector{Token}}
 end
 
-struct Language{T}
+struct Language
     sentencer
     tokenizer
     tagger
@@ -88,5 +88,5 @@ function (Lang::Language)(text::String)
     tokens = Lang.tokenizer.(sents)
     lexemes = [Lexeme.(sent) for sent in tokens]
     tags = Lang.tagger.(lexemes)
-    [Token.(lexeme_sent, tag_sent) for (lexeme_sent, tag_sent) in zip(lexemes, tags)]
+    Doc([Token.(lexeme_sent, tag_sent) for (lexeme_sent, tag_sent) in zip(lexemes, tags)])
 end
