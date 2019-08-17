@@ -1,7 +1,13 @@
-function Base.hash(s::AbstractString)
+function hash(s::AbstractString)
     MurmurHash3.mmhash128_8_c(s, 0x00000000)[1]
 end
 
+"""
+Utility function to add empty strings to pad a vector of words.
+Positions should be an array of relative positions to a sequence index.
+
+For example, if positions is -1:1, that means the array is padded at the beginning and end
+"""
 function padsentence(sentence::Vector{String}, positions::T) where T
     start = min(minimum(positions), 0)
     stop = max(maximum(positions), 0)

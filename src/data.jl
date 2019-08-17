@@ -24,12 +24,12 @@ function Lexeme(s::AbstractString)
     )
 end
 
-function suffix(s::String, n::Int64)
+function suffix(s::AbstractString, n::Int64)
     lastind, slen = lastindex(s), length(codeunits(s))
     SubString(s, prevind(s, slen + 1, min(n, length(s))), lastind)
 end
 
-function prefix(s::String, n::Int64)
+function prefix(s::AbstractString, n::Int64)
     SubString(s, 1, min(nextind(s, 0, n), length(s)))
 end
 
@@ -77,13 +77,13 @@ mutable struct Doc
     tokens::Vector{Vector{Token}}
 end
 
-struct Language
+struct Pipeline
     sentencer
     tokenizer
     tagger
 end
 
-function (Lang::Language)(text::String)
+function (Lang::Pipeline)(text::String)
     sents = Lang.sentencer(text)
     tokens = Lang.tokenizer.(sents)
     lexemes = [Lexeme.(sent) for sent in tokens]

@@ -145,6 +145,28 @@ struct GreedyApTagger
     model::AveragedPerceptron
 end
 
+"""
+Returns tags for a sequence of Lexeme structs.
+
+Example:
+```julia
+julia> words = split("All work and no play makes Jack a dull boy .")
+julia> tagger(NLPeterman.Lexeme.(words))
+11-element Array{Int64,1}:
+  7
+  9
+  6
+  7
+  9
+ 17
+ 13
+  7https://www.youtube.com/watch?v=kc9HwsxE1OY
+  1
+  9
+ 14
+```
+
+"""
 function (g::GreedyApTagger)(sent::Vector{Lexeme})
     labels = zeros(Int64, length(sent))
     for (i, l) in enumerate(sent)
