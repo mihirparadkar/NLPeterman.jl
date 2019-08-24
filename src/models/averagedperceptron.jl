@@ -175,6 +175,6 @@ function (g::GreedyApTagger)(sent::Vector{Lexeme})
         end
     end
     featmat = sent2feats(sent, g.features, g.positions)
-    complete_prediction!(g.model, featmat, labels, length(taglist) + 1)
+    complete_prediction!(g.model, featmat, labels, length(uposlist) + 1)
     labels
 end

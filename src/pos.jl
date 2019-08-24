@@ -21,7 +21,7 @@ const tag_to_idx = Dict(
     "SPACE" => 20,
 )
 
-const taglist = [
+const uposlist = [
     "ADJ",
     "ADP",
     "ADV",

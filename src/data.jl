@@ -7,6 +7,15 @@ mutable struct Lexeme
     suffix::UInt64
 end
 
+for nm in fieldnames(Lexeme)
+    if nm in names(Base)
+        eval(:(import Base.$nm))
+        eval(:($Base.$nm(l::Lexeme) = l.$nm))
+    else
+        eval(:($nm(l::Lexeme) = l.$nm))    
+    end
+end
+
 function Lexeme(s::AbstractString)
     orth = hash(s)
     len = length(s)
@@ -73,7 +82,18 @@ mutable struct Token
     pos::Int64
 end
 
-mutable struct Doc
+for nm in fieldnames(Lexeme)
+    if nm in names(Base)
+        eval(:($Base.$nm(t::Token) = t.lex.$nm))
+    else
+        eval(:($nm(t::Token) = t.lex.$nm))    
+    end
+end
+
+upos(t::Token) = t.pos
+uposname(t::Token) = uposlist[t.pos]
+
+mutable struct ProcessedDoc
     tokens::Vector{Vector{Token}}
 end
 
@@ -88,5 +108,7 @@ function (Lang::Pipeline)(text::String)
     tokens = Lang.tokenizer.(sents)
     lexemes = [Lexeme.(sent) for sent in tokens]
     tags = Lang.tagger.(lexemes)
-    Doc([Token.(lexeme_sent, tag_sent) for (lexeme_sent, tag_sent) in zip(lexemes, tags)])
+    ProcessedDoc([Token.(lexeme_sent, tag_sent) for (lexeme_sent, tag_sent) in zip(lexemes, tags)])
 end
+
+Base.getindex(p::ProcessedDoc, sent) = p.tokens[sent]
