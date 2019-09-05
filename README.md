@@ -31,3 +31,9 @@ NLP.uposname.(pd[1])
  "PUNCT"
 =#
 ```
+
+# Available Models
+
+```julia
+tagger-en-v0.1.0 : tagger
+```
